@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 var gulp = require('gulp');
+var ghPages = require('gulp-gh-pages');
 
 // Load all gulp plugins automatically
 // and attach them to the `plugins` object
@@ -168,3 +169,16 @@ gulp.task('build', function (done) {
 });
 
 gulp.task('default', ['build']);
+
+gulp.task('deploy:master', function() {
+    return gulp.src('./dist/**/*')
+        .pipe(ghPages({ branch: 'master' }));
+});
+
+gulp.task('deploy', function (done) {
+    runSequence(
+        'build',
+        'deploy:master',
+        done);
+});
+
