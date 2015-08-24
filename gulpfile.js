@@ -3,6 +3,9 @@ var path = require('path');
 
 var gulp = require('gulp');
 var ghPages = require('gulp-gh-pages');
+var sass = require('gulp-sass');
+var fileinclude = require('gulp-file-include');
+var connect = require('gulp-connect');
 
 // Load all gulp plugins automatically
 // and attach them to the `plugins` object
@@ -154,6 +157,62 @@ gulp.task('lint:js', function () {
       .pipe(plugins.jshint.reporter('fail'));
 });
 
+gulp.task('sass', function () {
+    gulp.src('./src/sass/**/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('./src/css'));
+});
+
+gulp.task('sass:watch', function () {
+    gulp.watch('./sass/**/*.scss', ['sass']);
+});
+
+gulp.task('fileinclude', function() {
+    gulp.src(['./dist/index.html'])
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: '@file'
+        }))
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('deploy:master', function() {
+    return gulp.src('./dist/**/*')
+        .pipe(ghPages({ branch: 'master' }));
+});
+
+gulp.task('webserver', function() {
+    connect.server({
+        root: 'dist',
+        livereload: true
+    });
+});
+
+gulp.task('reload', function () {
+    gulp.src('./dist/*.html')
+        .pipe(connect.reload());
+});
+
+gulp.task('watch', function () {
+    gulp.watch(['./src/**/*.html'], ['watch:html']);
+    gulp.watch(['./src/**/*.scss'], ['watch:scss']);
+});
+
+gulp.task('watch:html', function (done) {
+    runSequence(
+        'copy',
+        'fileinclude',
+        'reload',
+        done);
+});
+
+gulp.task('watch:scss', function (done) {
+    runSequence(
+        'sass',
+        'copy',
+        'reload',
+        done);
+});
 
 // ---------------------------------------------------------------------
 // | Main tasks                                                        |
@@ -170,15 +229,10 @@ gulp.task('archive', function (done) {
 gulp.task('build', function (done) {
     runSequence(
         ['clean', 'lint:js'],
+        'sass',
         'copy',
+        'fileinclude',
     done);
-});
-
-gulp.task('default', ['build']);
-
-gulp.task('deploy:master', function() {
-    return gulp.src('./dist/**/*')
-        .pipe(ghPages({ branch: 'master' }));
 });
 
 gulp.task('deploy', function (done) {
@@ -187,4 +241,15 @@ gulp.task('deploy', function (done) {
         'deploy:master',
         done);
 });
+
+gulp.task('server', function (done) {
+    runSequence(
+        'build',
+        'webserver',
+        'watch',
+        done);
+});
+
+gulp.task('default', ['build']);
+
 
