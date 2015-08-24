@@ -72,7 +72,8 @@ gulp.task('copy', [
     'copy:license',
     'copy:main.css',
     'copy:misc',
-    'copy:normalize'
+    'copy:normalize',
+    'copy:CNAME'
 ]);
 
 gulp.task('copy:.htaccess', function () {
@@ -135,6 +136,11 @@ gulp.task('copy:misc', function () {
 gulp.task('copy:normalize', function () {
     return gulp.src('node_modules/normalize.css/normalize.css')
                .pipe(gulp.dest(dirs.dist + '/css'));
+});
+
+gulp.task('copy:CNAME', function () {
+    return gulp.src('CNAME')
+               .pipe(gulp.dest(dirs.dist));
 });
 
 gulp.task('lint:js', function () {
