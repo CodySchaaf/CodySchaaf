@@ -73,7 +73,6 @@ gulp.task('copy', [
     'copy:index.html',
     'copy:jquery',
     'copy:license',
-    'copy:main.css',
     'copy:misc',
     'copy:normalize',
     'copy:CNAME'
@@ -100,21 +99,6 @@ gulp.task('copy:jquery', function () {
 gulp.task('copy:license', function () {
     return gulp.src('LICENSE.txt')
                .pipe(gulp.dest(dirs.dist));
-});
-
-gulp.task('copy:main.css', function () {
-
-    var banner = '/*! HTML5 Boilerplate v' + pkg.version +
-                    ' | ' + pkg.license.type + ' License' +
-                    ' | ' + pkg.homepage + ' */\n\n';
-
-    return gulp.src(dirs.src + '/css/main.css')
-               .pipe(plugins.header(banner))
-               .pipe(plugins.autoprefixer({
-                   browsers: ['last 2 versions', 'ie >= 8', '> 1%'],
-                   cascade: false
-               }))
-               .pipe(gulp.dest(dirs.dist + '/css'));
 });
 
 gulp.task('copy:misc', function () {
@@ -158,13 +142,18 @@ gulp.task('lint:js', function () {
 });
 
 gulp.task('sass', function () {
+    var banner = '/*! HTML5 Boilerplate v' + pkg.version +
+        ' | ' + pkg.license.type + ' License' +
+        ' | ' + pkg.homepage + ' */\n\n';
+
     gulp.src('./src/sass/**/*.scss')
         .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('./src/css'));
-});
-
-gulp.task('sass:watch', function () {
-    gulp.watch('./sass/**/*.scss', ['sass']);
+        .pipe(plugins.header(banner))
+        .pipe(plugins.autoprefixer({
+            browsers: ['last 2 versions', 'ie >= 8', '> 1%'],
+            cascade: false
+        }))
+        .pipe(gulp.dest(dirs.dist + '/css'));
 });
 
 gulp.task('fileinclude', function() {
@@ -210,6 +199,7 @@ gulp.task('watch:scss', function (done) {
     runSequence(
         'sass',
         'copy',
+        'fileinclude',
         'reload',
         done);
 });
