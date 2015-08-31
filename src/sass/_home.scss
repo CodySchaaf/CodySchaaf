@@ -1,0 +1,64 @@
+[home] {
+    svg {
+        display: block;
+        margin: auto;
+        .add-svg-animation-path {
+            animation: dash .6s ease-in-out forwards;
+        }
+        //.add-svg-transition-path {
+        //    transition: dash .6s ease-in-out forwards;
+        //}
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    }
+
+    .about-me {
+    //    display: none;
+        &.ready {
+            transition: transform 1s ease-in-out;
+        }
+        &:not(.ready) {
+            display: none;
+        }
+    }
+    .arrow-down {
+        position: fixed;
+        left: 50%;
+        bottom: 10px;
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        opacity: 1;
+        border-top: 20px solid $accent;
+        transition: opacity 1s ease-in-out, top 1s ease-in-out, transform 1s ease-in-out;
+        @keyframes pulse {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: .8;
+                transform: scale(1.2);
+            }
+        }
+
+        &.inactive {
+            opacity: 0 !important;
+        }
+        &.active {
+            animation: pulse 1.5s ease-in-out infinite alternate;
+        }
+    }
+
+
+    .canvas-container {
+        width:  60%;
+        position: relative;
+        left: 20%;
+    }
+}

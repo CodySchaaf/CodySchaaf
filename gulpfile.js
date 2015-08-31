@@ -2,10 +2,20 @@ var fs = require('fs');
 var path = require('path');
 
 var gulp = require('gulp');
+var debug = require('gulp-debug');
+var tap = require('gulp-tap');
+
 var ghPages = require('gulp-gh-pages');
 var sass = require('gulp-sass');
 var fileinclude = require('gulp-file-include');
 var connect = require('gulp-connect');
+
+var browserify = require('browserify');
+var transform = require('vinyl-transform');
+var uglify = require('gulp-uglify');
+
+var concat = require('gulp-concat');
+var sourcemaps = require('gulp-sourcemaps');
 
 // Load all gulp plugins automatically
 // and attach them to the `plugins` object
@@ -52,6 +62,7 @@ gulp.task('archive:zip', function (done) {
         archiver.append(fs.createReadStream(filePath), {
             'name': file,
             'mode': fs.statSync(filePath)
+
         });
 
     });
@@ -72,7 +83,9 @@ gulp.task('copy', [
     'copy:.htaccess',
     'copy:index.html',
     'copy:jquery',
+    'copy:lodash',
     'copy:license',
+    'copy:js',
     'copy:misc',
     'copy:normalize',
     'copy:CNAME'
@@ -87,6 +100,7 @@ gulp.task('copy:.htaccess', function () {
 gulp.task('copy:index.html', function () {
     return gulp.src(dirs.src + '/index.html')
                .pipe(plugins.replace(/{{JQUERY_VERSION}}/g, pkg.devDependencies.jquery))
+               .pipe(plugins.replace(/{{LODASH_VERSION}}/g, pkg.devDependencies.lodash))
                .pipe(gulp.dest(dirs.dist));
 });
 
@@ -96,9 +110,24 @@ gulp.task('copy:jquery', function () {
                .pipe(gulp.dest(dirs.dist + '/js/vendor'));
 });
 
+gulp.task('copy:lodash', function () {
+    return gulp.src(['node_modules/lodash/index.js'])
+               .pipe(plugins.rename('lodash-' + pkg.devDependencies.lodash + '.js'))
+               .pipe(gulp.dest(dirs.dist + '/js/vendor'));
+});
+
 gulp.task('copy:license', function () {
     return gulp.src('LICENSE.txt')
                .pipe(gulp.dest(dirs.dist));
+});
+
+
+gulp.task('copy:js', function () {
+    return gulp.src([dirs.src + '/js/main.js', dirs.src + '/js/home/**/*'])
+        .pipe(sourcemaps.init())
+        .pipe(concat('main.js'))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(dirs.dist + '/js/'));
 });
 
 gulp.task('copy:misc', function () {
@@ -109,6 +138,8 @@ gulp.task('copy:misc', function () {
 
         // Exclude the following files
         // (other tasks will handle the copying of these files)
+        '!' + dirs.src + '/js/main.js',
+        '!' + dirs.src + '/js/home/**/*',
         '!' + dirs.src + '/css/main.css',
         '!' + dirs.src + '/index.html'
 
@@ -183,6 +214,7 @@ gulp.task('reload', function () {
 });
 
 gulp.task('watch', function () {
+    gulp.watch(['./src/**/*.js'], ['watch:js']);
     gulp.watch(['./src/**/*.html'], ['watch:html']);
     gulp.watch(['./src/**/*.scss'], ['watch:scss']);
 });
@@ -204,6 +236,26 @@ gulp.task('watch:scss', function (done) {
         done);
 });
 
+gulp.task('watch:js', function (done) {
+    runSequence(
+        'copy',
+        'fileinclude',
+        'reload',
+        done);
+});
+
+gulp.task('browserify', function () {
+    var browserified = transform(function(filename) {
+        var b = browserify(filename);
+        return b.bundle();
+    });
+
+    return gulp.src(['./src/*.js'])
+        .pipe(browserified)
+        .pipe(uglify())
+        .pipe(gulp.dest('./dist'));
+});
+
 // ---------------------------------------------------------------------
 // | Main tasks                                                        |
 // ---------------------------------------------------------------------
@@ -218,7 +270,8 @@ gulp.task('archive', function (done) {
 
 gulp.task('build', function (done) {
     runSequence(
-        ['clean', 'lint:js'],
+        //['clean', 'lint:js'],
+        ['clean'],
         'sass',
         'copy',
         'fileinclude',

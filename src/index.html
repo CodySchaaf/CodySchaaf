@@ -21,13 +21,16 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <div class="body-wrapper">
+        <!--<div class="body-wrapper">-->
+        @@include('./html/header.html')
+        <div>
             @@include('./html/main.html')
         </div>
-        @@include('./html/footer.html')
+        <!--@@include('./html/footer.html')-->
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/{{JQUERY_VERSION}}/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-{{JQUERY_VERSION}}.min.js"><\/script>')</script>
+        <script src="js/vendor/lodash-{{LODASH_VERSION}}.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 

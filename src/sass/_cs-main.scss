@@ -1,6 +1,7 @@
 $text-size-h5: .8em;
 html, body {
     background: $light-wash;
+    color: $color-4;
 }
 
 .text-center {
@@ -21,6 +22,10 @@ html, body {
     padding-left: 15px;
     margin-right: auto;
     margin-left: auto;
+}
+
+#myCanvas {
+    //position: absolute;
 }
 
 .link {
