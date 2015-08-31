@@ -200,9 +200,10 @@ var CS;
                         },1000);
                     });
                 };
-                var mouseWheelCB = function(event) {
+                var CB = function(event, direction) {
+                    console.log(Canvas.scrollIndex);
                     if (Canvas.doneDrawing) {
-                        if (event.originalEvent.wheelDelta <= 0 && Canvas.scrollIndex >= 0) {
+                        if (direction <= 0 && Canvas.scrollIndex >= 0) {
                             if (Canvas.scrollIndex === 0) {
                                 Canvas.scrollIndex -= 1;
                                 window.requestAnimationFrame(function() {
@@ -215,19 +216,38 @@ var CS;
                                     context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
                                 }.bind(null, Canvas.scrollIndex));
                             }
-                        } else if (event.originalEvent.wheelDelta >= 0 && Canvas.scrollIndex < cachedKeys.length - 1 && Canvas.scrollIndex >= 0) {
+                        } else if (direction >= 0 && Canvas.scrollIndex < cachedKeys.length - 1 && Canvas.scrollIndex >= 0) {
                             Canvas.scrollIndex += 1;
                             window.requestAnimationFrame(function(index) {
                                 context.clearRect(0, 0, context.canvas.width, context.canvas.height);
                                 context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
                             }.bind(null, Canvas.scrollIndex));
-                        } else if (event.originalEvent.wheelDelta <= 0 && Canvas.scrollIndex <= 0) {
+                        } else if (direction <= 0 && Canvas.scrollIndex <= 0) {
                             Canvas.scrollIndex -= 1; //used in svg
                             updateArrow();
                             $(window).off('mousewheel');
+                            $('.arrow-down').off('click');
                         }
                     }
                 };
+                var mouseWheelCB = function(event) {
+                    CB(event, event.originalEvent.wheelDelta);
+                };
+                var arrowClickCB2 = function(event) {
+                    $('#eventDelegator').trigger('SVG:clear');
+                    $('.arrow-down').off('click', arrowClickCB2);
+                    window.requestAnimationFrame(function(index) {
+                        CB(event, -1);
+                        if (Canvas.scrollIndex >= -1) {
+                            arrowClickCB2();
+                        }
+                    });
+                };
+                var arrowClickCB1 = function(event) {
+                    $('.arrow-down').off('click', arrowClickCB1).on('click', arrowClickCB2).addClass("show-help");
+
+                };
+                $('.arrow-down').on('click', arrowClickCB1);
                 $(window).on('mousewheel', _.throttle(mouseWheelCB, 25, {trailing: true, leading: true}));
                 $(".about-me").css({transform: 'translate(0px,'+ ($(".arrow-down").offset().top+20) +'px)'}).addClass('ready');
 

@@ -22,16 +22,19 @@
         }
     }
     .arrow-down {
+        width: 100%;
         position: fixed;
-        left: 50%;
         bottom: 10px;
-        width: 0;
-        height: 0;
-        border-left: 20px solid transparent;
-        border-right: 20px solid transparent;
         opacity: 1;
-        border-top: 20px solid $accent;
         transition: opacity 1s ease-in-out, top 1s ease-in-out, transform 1s ease-in-out;
+        .arrow {
+            margin: auto;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 20px solid $accent;
+        }
         @keyframes pulse {
             from {
                 opacity: 1;
@@ -47,7 +50,20 @@
             opacity: 0 !important;
         }
         &.active {
-            animation: pulse 1.5s ease-in-out infinite alternate;
+            .arrow {
+                animation: pulse 1.2s ease-in-out infinite alternate;
+            }
+        }
+        &.show-help {
+            .help {
+                opacity: 1;
+            }
+        }
+        .help {
+            text-align: center;
+            margin-bottom: 20px;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
         }
     }
 

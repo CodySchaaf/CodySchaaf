@@ -28,14 +28,16 @@ var CS;
             };
             var init = function() {
                 draw();
-                $(window).on('mousewheel', function(event) {
+                var cb = function(event) {
                     if (Home.Canvas.doneDrawing && Home.Canvas.scrollIndex >= 0) {
                         $("path").each(function(index, el) {
                             var $el = $(el);
                             $el.css({'stroke-dashoffset': (el.getTotalLength()/Home.Canvas.maxScrollIndex) * (Home.Canvas.maxScrollIndex - Home.Canvas.scrollIndex)});
                         })
                     }
-                });
+                };
+                $(window).on('mousewheel', cb);
+                $('#eventDelegator').on('SVG:clear', cb);
             };
             return {
                 init: init
