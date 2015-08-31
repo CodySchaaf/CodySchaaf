@@ -23,7 +23,6 @@ var CS;
             };
             var pointsStartFn = function() {
                 return {
-                    //'c0': [cXOffset,cYOffset],
                     'c1': [cXOffset-normal(letterXSize),baseYOffset-normal(letterYSize, 50)],
                     'c2': [cXOffset-normal(letterXSize, 50),baseYOffset-normal(letterYSize)],
                     'c3': [cXOffset-normal(letterXSize, 50),baseYOffset+normal(letterYSize)],
@@ -47,7 +46,6 @@ var CS;
             };
             var pointsEndFn = function() {
                 return {
-                    //'c0': [cXOffset,cYOffset],
                     'c1': [cXOffset-normal(letterXSize),baseYOffset+normal(letterYSize, 50)],
                     'c2': [cXOffset+normal(letterXSize, 50),baseYOffset-normal(letterYSize)],
                     'c3': [cXOffset+normal(letterXSize, 50),baseYOffset+normal(letterYSize)],
@@ -95,10 +93,7 @@ var CS;
                 letterXSize = letterSize/2;
 
                 var max = 1000;
-                //var scrollStep = max;
-                //var scrollIndex = 0;
                 var cachedKeys = ["0"];
-                //var scrollChuncks = {};
                 var currentStart = function(letter) {
                     return pointsStartFn()[letter];
                 };
@@ -182,10 +177,6 @@ var CS;
                             Canvas.scrollIndex = cachedKeys.length - 1;
                             Canvas.maxScrollIndex = cachedKeys.length - 1;
                         } else {
-                            //var scrollSteps = 100/cachedKeys.length;
-                            //_.times(100, function(num) {
-                            //    scrollChuncks[num] = Math.floor(num/scrollSteps);
-                            //});
                             Canvas.doneDrawing = true;
                             $(".arrow-down").removeClass("inactive");
                             setTimeout(function() {
@@ -196,52 +187,17 @@ var CS;
                     strokePoints(1);
                 };
                 window.setTimeout(draw, 2000);
-                //var afterDrawLastScreenOffset;
-                //$(window).on("scroll", function() {
-                //    if (drew) {
-                //        if (afterDrawLastScreenOffset && afterDrawLastScreenOffset < window.scrollY && scrollIndex >= 0) {
-                //            if (scrollIndex === 0) {
-                //                window.requestAnimationFrame(function() {
-                //                    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-                //                });
-                //            } else {
-                //                scrollIndex -= 1;
-                //                window.requestAnimationFrame(function(index) {
-                //                    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-                //                    context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
-                //                }.bind(null, scrollIndex));
-                //            }
-                //        } else if (afterDrawLastScreenOffset && afterDrawLastScreenOffset > window.scrollY && scrollIndex < cachedKeys.length - 1) {
-                //            debugger;
-                //            scrollIndex += 1;
-                //            window.requestAnimationFrame(function(index) {
-                //                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-                //                context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
-                //            }.bind(null, scrollIndex));
-                //        }
-                //        //afterDrawLastScreenOffset = window.scrollY;
-                //    }
-                //});
-                var updateArrow = function(index) {
-                    //$(".arrow-down").css({transform: 'translate(0px, ' + index + 'px)'})
+                var updateArrow = function() {
                     $(".arrow-down").removeClass("active");
-                    //$(".arrow-down").css({top: $(".arrow-down").offset().top + 'px'});
                     $(".arrow-down").css({transform: 'translate(0px,0px)'});
                     $(".intro").hide();
-                    debugger;
-                    //document.getElementsByClassName('arrow-down')[0].style.display = 'none';
-                    //document.getElementsByClassName('arrow-down')[0].offsetHeight;
-                    //document.getElementsByClassName('arrow-down')[0].style.display = 'block';
                     window.requestAnimationFrame(function() {
-                    //$(".about-me").css({transform: 'translate(0px,0px)'});
                         $(".arrow-down").css({transform: 'translate(0px,'+ (-$(".arrow-down").offset().top+20) +'px)'});
                         $(".arrow-down").addClass("inactive");
                         $(".about-me").css({transform: 'none'});
                         setTimeout(function() {
                             $(window.document).find("body").css('overflow', 'visible');
-                            //$(".about-me").fadeIn();
                         },1000);
-                        //$(".arrow-down").css({top: '20px'})
                     });
                 };
                 var mouseWheelCB = function(event) {
@@ -266,14 +222,10 @@ var CS;
                                 context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
                             }.bind(null, Canvas.scrollIndex));
                         } else if (event.originalEvent.wheelDelta <= 0 && Canvas.scrollIndex <= 0) {
-                            Canvas.scrollIndex -= 1;
-                            updateArrow(Canvas.scrollIndex);
+                            Canvas.scrollIndex -= 1; //used in svg
+                            updateArrow();
                             $(window).off('mousewheel');
                         }
-                        //} else if (event.originalEvent.wheelDelta >= 0 && Canvas.scrollIndex <= 0) {
-                        //    Canvas.scrollIndex += 1;
-                        //    updateArrow(Canvas.scrollIndex)
-                        //}
                     }
                 };
                 $(window).on('mousewheel', _.throttle(mouseWheelCB, 25, {trailing: true, leading: true}));

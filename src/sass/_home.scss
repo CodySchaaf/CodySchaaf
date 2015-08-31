@@ -5,9 +5,6 @@
         .add-svg-animation-path {
             animation: dash .6s ease-in-out forwards;
         }
-        //.add-svg-transition-path {
-        //    transition: dash .6s ease-in-out forwards;
-        //}
 
         @keyframes dash {
             to {
@@ -17,7 +14,6 @@
     }
 
     .about-me {
-    //    display: none;
         &.ready {
             transition: transform 1s ease-in-out;
         }
