@@ -1,7 +1,7 @@
 $text-size-h5: .8em;
 html, body {
     background: $light-wash;
-    color: $color-4;
+    color: $color-5;
 }
 
 .text-center {
@@ -67,4 +67,8 @@ html, body {
 h5, .h5 {
     text-transform: uppercase;
     font-size: $text-size-h5;
+}
+
+h1, .h1 {
+    color: $color-4;
 }

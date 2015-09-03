@@ -20,6 +20,7 @@ var CS;
                             drawSVG(array.first());
                         } else {
                             $("path").removeAttr("class").css({'stroke-dashoffset': 0});
+                            $(".svg-group").attr("class", "svg-group filled");
                         }
                     };
                     $el.on(animationEndEvents.join(' '), cb);
@@ -33,6 +34,11 @@ var CS;
                         $("path").each(function(index, el) {
                             var $el = $(el);
                             $el.css({'stroke-dashoffset': (el.getTotalLength()/Home.Canvas.maxScrollIndex) * (Home.Canvas.maxScrollIndex - Home.Canvas.scrollIndex)});
+                            if (Home.Canvas.maxScrollIndex === Home.Canvas.scrollIndex) {
+                                $(".svg-group").attr("class", "svg-group filled");
+                            } else {
+                                $(".svg-group").attr("class", "svg-group");
+                            }
                         })
                     }
                 };

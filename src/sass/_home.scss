@@ -5,6 +5,13 @@
         .add-svg-animation-path {
             animation: dash .6s ease-in-out forwards;
         }
+        .svg-group {
+            transition: fill-opacity 1s ease-in-out;
+            fill-opacity: 0;
+            &.filled {
+                fill-opacity: 1;
+            }
+        }
 
         @keyframes dash {
             to {
@@ -26,7 +33,8 @@
         position: fixed;
         bottom: 10px;
         opacity: 1;
-        transition: opacity 1s ease-in-out, top 1s ease-in-out, transform 1s ease-in-out, visibility 0s 1s;
+        visibility: visible;
+        transition: opacity 1s ease-in-out, top 1s ease-in-out, transform 1s ease-in-out;
         .arrow {
             margin: auto;
             width: 0;
@@ -49,6 +57,9 @@
         &.inactive {
             opacity: 0 !important;
             visibility: hidden; //change to cs-hide
+        }
+        &.inactive-add {
+            transition: opacity 1s ease-in-out, top 1s ease-in-out, transform 1s ease-in-out, visibility 0s 1s;
         }
         &.active {
             .arrow {

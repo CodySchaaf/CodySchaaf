@@ -69,6 +69,7 @@ var CS;
             };
 
             var init = function() {
+                var downArrowEl = $(".arrow-down");
                 $(window.document).find("body").css('overflow', 'hidden');
                 window.scrollTo(0,0);
                 setTimeout(function() {
@@ -92,7 +93,7 @@ var CS;
                 letterYSize = letterSize;
                 letterXSize = letterSize/2;
 
-                var max = 1000;
+                var max = 2000;
                 var cachedKeys = ["0"];
                 var currentStart = function(letter) {
                     return pointsStartFn()[letter];
@@ -126,8 +127,8 @@ var CS;
                     var stepSizeX = diffX/max;
                     var diffY = end[1] - start[1];
                     var stepSizeY = diffY/max;
-                    stepSizeX = stepSizeX !== 0 ? 5 : 0;
-                    stepSizeY = stepSizeY !== 0 ? 5 : 0;
+                    //stepSizeX = stepSizeX !== 0 ? 1 : 0;
+                    //stepSizeY = stepSizeY !== 0 ? 1 : 0;
                     context.lineTo(start[0] + stepSizeX, start[1] + stepSizeY);
                     cachedContext.lineTo(start[0] + stepSizeX, start[1] + stepSizeY);
 
@@ -135,7 +136,7 @@ var CS;
                     cachedContext.strokeStyle = "#003153";
                     context.lineWidth = 2;
                     cachedContext.lineWidth = 2;
-                    context.stroke();
+                    //context.stroke();
                     cachedContext.stroke();
                     cachedCanvases[0] = cachedCanvas;
                 });
@@ -178,22 +179,25 @@ var CS;
                             Canvas.maxScrollIndex = cachedKeys.length - 1;
                         } else {
                             Canvas.doneDrawing = true;
-                            $(".arrow-down").removeClass("inactive");
+                            downArrowEl.removeClass("inactive");
                             setTimeout(function() {
-                                $(".arrow-down").addClass("active");
+                                downArrowEl.addClass("active");
                             }, 1000);
                         }
                     };
-                    strokePoints(1);
+                    strokePoints(0);
                 };
                 window.setTimeout(draw, 2000);
                 var updateArrow = function() {
-                    $(".arrow-down").removeClass("active");
-                    $(".arrow-down").css({transform: 'translate(0px,0px)'});
+                    downArrowEl.removeClass("active");
+                    downArrowEl.css({transform: 'translate(0px,0px)'});
                     $(".intro").hide();
                     window.requestAnimationFrame(function() {
-                        $(".arrow-down").css({transform: 'translate(0px,'+ (-$(".arrow-down").offset().top+20) +'px)'});
-                        $(".arrow-down").addClass("inactive");
+                        downArrowEl.css({transform: 'translate(0px,'+ (-downArrowEl.offset().top+20) +'px)'});
+                        downArrowEl.addClass("inactive-add");
+                        setTimeout(function() {
+                            downArrowEl.addClass("inactive");
+                        });
                         $(".about-me").css({transform: 'none'});
                         setTimeout(function() {
                             $(window.document).find("body").css('overflow', 'visible');
@@ -201,7 +205,6 @@ var CS;
                     });
                 };
                 var CB = function(event, direction) {
-                    console.log(Canvas.scrollIndex);
                     if (Canvas.doneDrawing) {
                         if (direction <= 0 && Canvas.scrollIndex >= 0) {
                             if (Canvas.scrollIndex === 0) {
@@ -226,7 +229,7 @@ var CS;
                             Canvas.scrollIndex -= 1; //used in svg
                             updateArrow();
                             $(window).off('mousewheel');
-                            $('.arrow-down').off('click');
+                            downArrowEl.off('click');
                         }
                     }
                 };
@@ -235,7 +238,7 @@ var CS;
                 };
                 var arrowClickCB2 = function(event) {
                     $('#eventDelegator').trigger('SVG:clear');
-                    $('.arrow-down').off('click', arrowClickCB2);
+                    downArrowEl.off('click', arrowClickCB2);
                     window.requestAnimationFrame(function(index) {
                         CB(event, -1);
                         if (Canvas.scrollIndex >= -1) {
@@ -244,12 +247,12 @@ var CS;
                     });
                 };
                 var arrowClickCB1 = function(event) {
-                    $('.arrow-down').off('click', arrowClickCB1).on('click', arrowClickCB2).addClass("show-help");
+                    downArrowEl.off('click', arrowClickCB1).on('click', arrowClickCB2).addClass("show-help");
 
                 };
-                $('.arrow-down').on('click', arrowClickCB1);
+                downArrowEl.on('click', arrowClickCB1);
                 $(window).on('mousewheel', _.throttle(mouseWheelCB, 25, {trailing: true, leading: true}));
-                $(".about-me").css({transform: 'translate(0px,'+ ($(".arrow-down").offset().top+20) +'px)'}).addClass('ready');
+                $(".about-me").css({transform: 'translate(0px,'+ (downArrowEl.offset().top+20) +'px)'}).addClass('ready');
 
             };
             return {
