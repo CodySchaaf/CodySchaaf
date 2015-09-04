@@ -13,7 +13,7 @@ var CS;
 			var aboutMe = $(".about-me");
 			aboutMe.height(window.innerHeight > aboutMe.height() ? window.innerHeight : aboutMe.height());
 			$(document).on("scroll", function() {
-				if (window.scrollY >= (Home.height - window.innerHeight + arrowHeight)) {
+				if (window.scrollY + window.innerHeight >= Home.height) {
 					$intro.removeClass("fixed");
 				} else {
 					$intro.addClass("fixed");
