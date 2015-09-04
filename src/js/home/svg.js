@@ -5,8 +5,8 @@ var CS;
         var SVG = (function() {
             var draw = function() {
                 var array = $("path").each(function(index, el) {
-                    var $el =  $(el);
-                    $el.css({'stroke-dasharray': el.getTotalLength(),'stroke-dashoffset': el.getTotalLength()});
+                    var $el = $(el);
+                    $el.css({'stroke-dasharray': el.getTotalLength(), 'stroke-dashoffset': el.getTotalLength()});
                 });
                 $("svg").removeAttr("class");
                 var animationEndEvents = ["animationend", "oAnimationEnd", "webkitAnimationEnd", "MSAnimationEnd", "mozAnimationEnd"];
@@ -29,11 +29,11 @@ var CS;
             };
             var init = function() {
                 draw();
-                var cb = function(event) {
+                var cb = function() {
                     if (Home.Canvas.doneDrawing && Home.Canvas.scrollIndex >= 0) {
                         $("path").each(function(index, el) {
                             var $el = $(el);
-                            $el.css({'stroke-dashoffset': (el.getTotalLength()/Home.Canvas.maxScrollIndex) * (Home.Canvas.maxScrollIndex - Home.Canvas.scrollIndex)});
+                            $el.css({'stroke-dashoffset': (el.getTotalLength() / Home.Canvas.maxScrollIndex) * (Home.Canvas.maxScrollIndex - Home.Canvas.scrollIndex)});
                             if (Home.Canvas.maxScrollIndex === Home.Canvas.scrollIndex) {
                                 $(".svg-group").attr("class", "svg-group filled");
                             } else {
@@ -42,8 +42,7 @@ var CS;
                         })
                     }
                 };
-                $(window).on('mousewheel', cb);
-                $('#eventDelegator').on('SVG:clear', cb);
+                $(window).on('scroll', _.throttle(cb, 25, {trailing: true, leading: true}));
             };
             return {
                 init: init
