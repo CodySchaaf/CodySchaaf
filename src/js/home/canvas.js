@@ -115,31 +115,10 @@ var CS;
                     context.lineTo(start[0] + stepSizeX * step, start[1] + stepSizeY * step);
                     cachedContext.lineTo(start[0] + stepSizeX * step, start[1] + stepSizeY * step);
                 };
-                _.forOwn(pointsStartFn(), function(points, letter) {
-                    var cachedCanvas = document.createElement('canvas');
-                    cachedCanvas.width = context.canvas.width;
-                    cachedCanvas.height = context.canvas.height;
-                    var cachedContext = cachedCanvas.getContext('2d');
-                    moveTo(points, cachedContext);
-                    var start = currentStart(letter);
-                    var end = currentEnd(letter);
-                    var diffX = end[0] - start[0];
-                    var stepSizeX = diffX/max;
-                    var diffY = end[1] - start[1];
-                    var stepSizeY = diffY/max;
-                    //stepSizeX = stepSizeX !== 0 ? 1 : 0;
-                    //stepSizeY = stepSizeY !== 0 ? 1 : 0;
-                    context.lineTo(start[0] + stepSizeX, start[1] + stepSizeY);
-                    cachedContext.lineTo(start[0] + stepSizeX, start[1] + stepSizeY);
-
-                    context.strokeStyle = "#003153";
-                    cachedContext.strokeStyle = "#003153";
-                    context.lineWidth = 2;
-                    cachedContext.lineWidth = 2;
-                    //context.stroke();
-                    cachedContext.stroke();
-                    cachedCanvases[0] = cachedCanvas;
-                });
+                var cachedCanvas = document.createElement('canvas');
+                cachedCanvas.width = context.canvas.width;
+                cachedCanvas.height = context.canvas.height;
+                cachedCanvases[0] = cachedCanvas;
 
                 var draw = function() {
                     var stepEr = 0;
@@ -179,81 +158,37 @@ var CS;
                             Canvas.maxScrollIndex = cachedKeys.length - 1;
                         } else {
                             Canvas.doneDrawing = true;
-                            downArrowEl.removeClass("inactive");
-                            setTimeout(function() {
-                                downArrowEl.addClass("active");
-                            }, 1000);
+                            $(window.document).find("body").css('overflow', 'visible');
+                            downArrowEl.addClass("active");
                         }
                     };
                     strokePoints(0);
                 };
                 window.setTimeout(draw, 2000);
-                var updateArrow = function() {
-                    downArrowEl.removeClass("active");
-                    downArrowEl.css({transform: 'translate(0px,0px)'});
-                    $(".intro").hide();
-                    window.requestAnimationFrame(function() {
-                        downArrowEl.css({transform: 'translate(0px,'+ (-downArrowEl.offset().top+20) +'px)'});
-                        downArrowEl.addClass("inactive-add");
-                        setTimeout(function() {
-                            downArrowEl.addClass("inactive");
-                        });
-                        $(".about-me").css({transform: 'none'});
-                        setTimeout(function() {
-                            $(window.document).find("body").css('overflow', 'visible');
-                        },1000);
-                    });
+                var previousScrollIndex = Canvas.maxScrollIndex;
+                var animationLength = Home.height - window.innerHeight;
+                var normalize = function(currentScroll) {
+                    var num = Math.round(((animationLength-currentScroll)/(animationLength))*(Canvas.maxScrollIndex));
+                    if (num < 0) {return 0;}
+                    else if (num > Canvas.maxScrollIndex) {return Canvas.maxScrollIndex;}
+                    else {return num;}
                 };
-                var CB = function(event, direction) {
-                    if (Canvas.doneDrawing) {
-                        if (direction <= 0 && Canvas.scrollIndex >= 0) {
-                            if (Canvas.scrollIndex === 0) {
-                                Canvas.scrollIndex -= 1;
-                                window.requestAnimationFrame(function() {
-                                    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-                                });
-                            } else {
-                                Canvas.scrollIndex -= 1;
-                                window.requestAnimationFrame(function(index) {
-                                    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-                                    context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
-                                }.bind(null, Canvas.scrollIndex));
-                            }
-                        } else if (direction >= 0 && Canvas.scrollIndex < cachedKeys.length - 1 && Canvas.scrollIndex >= 0) {
-                            Canvas.scrollIndex += 1;
-                            window.requestAnimationFrame(function(index) {
-                                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-                                context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
-                            }.bind(null, Canvas.scrollIndex));
-                        } else if (direction <= 0 && Canvas.scrollIndex <= 0) {
-                            Canvas.scrollIndex -= 1; //used in svg
-                            updateArrow();
-                            $(window).off('mousewheel');
-                            downArrowEl.off('click');
-                        }
+                var mouseWheelCB = function() {
+                    Canvas.scrollIndex = normalize(window.scrollY);
+                    if (Canvas.doneDrawing && Canvas.scrollIndex !== previousScrollIndex) {
+                        previousScrollIndex = Canvas.scrollIndex;
+                        window.requestAnimationFrame(function(index) {
+                            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+                            context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
+                        }.bind(null, Canvas.scrollIndex));
                     }
                 };
-                var mouseWheelCB = function(event) {
-                    CB(event, event.originalEvent.wheelDelta);
-                };
-                var arrowClickCB2 = function(event) {
-                    $('#eventDelegator').trigger('SVG:clear');
-                    downArrowEl.off('click', arrowClickCB2);
-                    window.requestAnimationFrame(function(index) {
-                        CB(event, -1);
-                        if (Canvas.scrollIndex >= -1) {
-                            arrowClickCB2();
-                        }
-                    });
-                };
-                var arrowClickCB1 = function(event) {
-                    downArrowEl.off('click', arrowClickCB1).on('click', arrowClickCB2).addClass("show-help");
+                var arrowClickCB1 = function() {
+                    downArrowEl.off('click', arrowClickCB1).addClass("show-help");
 
                 };
                 downArrowEl.on('click', arrowClickCB1);
                 $(window).on('mousewheel', _.throttle(mouseWheelCB, 25, {trailing: true, leading: true}));
-                $(".about-me").css({transform: 'translate(0px,'+ (downArrowEl.offset().top+20) +'px)'}).addClass('ready');
-
             };
             return {
                 init: init,

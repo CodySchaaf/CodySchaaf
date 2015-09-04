@@ -29,7 +29,7 @@ var CS;
             };
             var init = function() {
                 draw();
-                var cb = function(event) {
+                var cb = function() {
                     if (Home.Canvas.doneDrawing && Home.Canvas.scrollIndex >= 0) {
                         $("path").each(function(index, el) {
                             var $el = $(el);
@@ -42,8 +42,7 @@ var CS;
                         })
                     }
                 };
-                $(window).on('mousewheel', cb);
-                $('#eventDelegator').on('SVG:clear', cb);
+                $(window).on('scroll', _.throttle(cb, 25, {trailing: true, leading: true}));
             };
             return {
                 init: init
