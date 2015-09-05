@@ -29,7 +29,10 @@ var CS;
 			};
 			var init = function() {
 				draw();
-				var cb = function() {
+			};
+			return {
+				init: init,
+				render: function() {
 					if (Home.Canvas.doneDrawing && Home.Canvas.scrollIndex >= 0) {
 						$("path").each(function(index, el) {
 							var $el = $(el);
@@ -41,11 +44,7 @@ var CS;
 							}
 						})
 					}
-				};
-				$(window).on('scroll', _.throttle(cb, 25, {trailing: true, leading: true}));
-			};
-			return {
-				init: init
+				}
 			}
 		})();
 		Home.SVG = SVG;

@@ -180,6 +180,7 @@ var CS;
 						window.requestAnimationFrame(function(index) {
 							context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 							context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
+							CS.Home.SVG.render();
 						}.bind(null, Canvas.scrollIndex));
 					}
 				};

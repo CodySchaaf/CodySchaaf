@@ -2,6 +2,7 @@ var CS;
 (function(CS) {
     CS.initArray = [];
     CS.init = function() {
+        CS.Delegator = $('#eventDelegator');
         //CS.initArray.forEach(function(item, index) {
         //    item();
         //})
