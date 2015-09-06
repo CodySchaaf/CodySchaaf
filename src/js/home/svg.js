@@ -13,7 +13,6 @@ var CS;
 				var drawSVG = function($el) {
 					array = array.not($el);
 					$el.attr("class", "add-svg-animation-path");
-					$el.attr("class", "add-svg-animation-path");
 					var cb = function() {
 						$el.off(animationEndEvents.join(' '), cb);
 						if (array.length !== 0) {

@@ -15,7 +15,7 @@ var CS;
 			var letterYSize;
 			var letterXSize;
 
-			var cachedCanvases = {};
+			var cachedCanvases;
 
 			var normal = function(big, small) {
 				if (small === undefined) {small = 0}
@@ -68,13 +68,25 @@ var CS;
 				}
 			};
 
-			var init = function() {
+            var throttledScrollCB;
+            var animationFrameRequestId;
+			var init = function(isInitial) {
+                cachedCanvases = {};
+                if (animationFrameRequestId) {
+                    window.cancelAnimationFrame(animationFrameRequestId);
+                    animationFrameRequestId = null;
+                }
+                Canvas.doneDrawing =  false;
+                Canvas.scrollIndex =  0;
+                Canvas.maxScrollIndex =  0;
 				var downArrowEl = $(".arrow-down");
-				$(window.document).find("body").css('overflow', 'hidden');
-				window.scrollTo(0, 0);
-				setTimeout(function() {
-					window.scrollTo(0, 0);
-				});
+				if (isInitial) {
+                    $(window.document).find("body").css('overflow', 'hidden');
+                    window.scrollTo(0, 0);
+                    setTimeout(function() {
+                        window.scrollTo(0, 0);
+                    });
+                }
 				var parent = $('.canvas-container');
 				canvasElement = document.getElementById('myCanvas');
 				var context = canvasElement.getContext('2d');
@@ -151,7 +163,7 @@ var CS;
 							context.stroke();
 							cachedContext.stroke();
 							cachedCanvases[step] = cachedCanvas;
-							window.requestAnimationFrame(strokePoints.bind(null, stepEr + step));
+                            animationFrameRequestId = window.requestAnimationFrame(strokePoints.bind(null, stepEr + step));
 							stepEr += 1;
 							cachedKeys = _.keys(cachedCanvases);
 							Canvas.scrollIndex = cachedKeys.length - 1;
@@ -164,7 +176,11 @@ var CS;
 					};
 					strokePoints(0);
 				};
-				window.setTimeout(draw, 2000);
+                if (isInitial) {
+				    window.setTimeout(draw, 2000);
+                } else {
+                    draw();
+                }
 				var previousScrollIndex = Canvas.maxScrollIndex;
 				var animationLength = Home.height - window.innerHeight;
 				var normalize = function(currentScroll) {
@@ -173,11 +189,11 @@ var CS;
 					else if (num > Canvas.maxScrollIndex) {return Canvas.maxScrollIndex;}
 					else {return num;}
 				};
-				var mouseWheelCB = function() {
+				var scrollCB = function() {
 					Canvas.scrollIndex = normalize(window.scrollY);
 					if (Canvas.doneDrawing && Canvas.scrollIndex !== previousScrollIndex) {
 						previousScrollIndex = Canvas.scrollIndex;
-						window.requestAnimationFrame(function(index) {
+                        window.requestAnimationFrame(function(index) {
 							context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 							context.drawImage(cachedCanvases[cachedKeys[index]], 0, 0);
 							CS.Home.SVG.render();
@@ -188,8 +204,11 @@ var CS;
 					downArrowEl.off('click', arrowClickCB1).addClass("show-help");
 
 				};
+				downArrowEl.off('click', arrowClickCB1);
 				downArrowEl.on('click', arrowClickCB1);
-				$(window).on('mousewheel', _.throttle(mouseWheelCB, 25, {trailing: true, leading: true}));
+				$(window).off('scroll', throttledScrollCB);
+                throttledScrollCB = _.throttle(scrollCB, 25, {trailing: true, leading: true});
+				$(window).on('scroll', throttledScrollCB);
 			};
 			return {
 				init: init,
