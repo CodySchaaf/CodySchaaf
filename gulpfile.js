@@ -214,7 +214,7 @@ gulp.task('reload', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['./src/**/*.js'], ['watch:js']);
+    gulp.watch(['./src/**/*.js','./src/**/*.json'], ['watch:js']);
     gulp.watch(['./src/**/*.html'], ['watch:html']);
     gulp.watch(['./src/**/*.scss'], ['watch:scss']);
 });
