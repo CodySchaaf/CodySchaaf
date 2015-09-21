@@ -204,6 +204,7 @@ gulp.task('deploy:master', function() {
 gulp.task('webserver', function() {
     connect.server({
         root: 'dist',
+		port: 8000,
         livereload: true
     });
 });
