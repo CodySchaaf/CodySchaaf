@@ -9,7 +9,7 @@ var CS;
         $(".link").on("touchend", function(event) {
             setTimeout(function() {
                 window.location.href = $(this).attr("href");
-            },400);
+            }.bind(this),400);
         });
         CS.Home.init();
     }
