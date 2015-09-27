@@ -7,7 +7,6 @@ var CS;
         Home.init = function(isInitial) {
             if (isInitial == null) isInitial = true;
             else if (window.innerWidth === Home.cachedWindowWidth) return;
-            console.log(window.innerWidth);
             Home.cachedWindowWidth = window.innerWidth;
             Home.height = window.innerHeight * 5;
             var downArrowEl = $(".arrow-down");
