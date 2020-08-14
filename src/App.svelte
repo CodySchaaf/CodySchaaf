@@ -24,6 +24,10 @@
   import { renderWatcher } from './Cody/store';
   import { onMount } from 'svelte';
 
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js');
+  }
+
   let stopScroll = true;
 
   const unsubscribe = renderWatcher.subscribe(({ doneDrawing }) => {
