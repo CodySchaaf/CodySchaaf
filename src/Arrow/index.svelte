@@ -78,5 +78,5 @@
   {#if showHelp}
     <div class="help">Scroll down after animation.</div>
   {/if}
-  <div role="button" tabindex="0" class="arrow" style="cursor: pointer;"></div>
+  <div role="button" aria-label="Down Arrow" tabindex="0" class="arrow" style="cursor: pointer;"></div>
 </div>
