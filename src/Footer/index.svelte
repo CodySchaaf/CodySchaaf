@@ -15,7 +15,7 @@
   import Link from '../Link/index.svelte';
 </script>
 
-<div class="footer">
+<footer class="footer">
   <div>
     <Link href="http://blog.codyschaaf.com" text="My Blog" />
   </div>
@@ -24,4 +24,4 @@
     <Link href="https://svelte.dev/" text="Svelte" />
   </small>
 
-</div>
+</footer>

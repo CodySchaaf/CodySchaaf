@@ -2,15 +2,13 @@
   :root {
     --color-5: #423d3b;
     --color-4: #827e7b;
-    --color-2: #c1beba;
+    --color-2: #6e6c6a;
     --color-1: #f0eee8;
 
     --dark-wash: #f7f6f3;
     --light-wash: #fbfaf9;
 
     --accent: #003153;
-
-    --text-size-h5: 0.8em;
   }
 
   .stopScroll {

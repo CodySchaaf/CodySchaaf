@@ -2,6 +2,7 @@
   .canvas-container {
     width: 60%;
     position: relative;
+    display: block;
     left: 20%;
   }
 </style>
@@ -11,6 +12,7 @@
   import { pointsEndFn, pointsStartFn } from './canvas-helpers';
   import { heightStore } from '../Main/store';
   import { renderWatcher } from './store';
+  import throttle from 'lodash.throttle';
 
   // var throttledScrollCB;
   // var animationFrameRequestId;
@@ -128,14 +130,16 @@
               dXOffset,
               yXOffset,
             }),
-          ).map(
-            ([letter, points]) => {
-              moveTo(points, cachedContext);
-              lineTo(letter as keyof ReturnType<typeof pointsStartFn>, step, cachedContext);
-              context.lineWidth = 2;
-              cachedContext.lineWidth = 2;
-            },
-          );
+          ).map(([letter, points]) => {
+            moveTo(points, cachedContext);
+            lineTo(
+              letter as keyof ReturnType<typeof pointsStartFn>,
+              step,
+              cachedContext,
+            );
+            context.lineWidth = 2;
+            cachedContext.lineWidth = 2;
+          });
 
           if (step / max >= 1 / 8) {
             context.strokeStyle =
@@ -180,26 +184,39 @@
         return num;
       }
     };
-    scrollCB = () => {
-      scrollIndex = normalize(window.scrollY);
-      if (doneDrawing && scrollIndex !== previousScrollIndex) {
-        previousScrollIndex = scrollIndex;
-        window.requestAnimationFrame(() => {
-          context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-          context.drawImage(cachedCanvases[cachedKeys[scrollIndex]], 0, 0);
-          renderWatcher.set({ doneDrawing, maxScrollIndex, scrollIndex });
-        });
-      }
-    };
+    scrollCB = throttle(
+      () => {
+        scrollIndex = normalize(window.scrollY);
+        if (doneDrawing && scrollIndex !== previousScrollIndex) {
+          previousScrollIndex = scrollIndex;
+          window.requestAnimationFrame(() => {
+            context.clearRect(
+              0,
+              0,
+              context.canvas.width,
+              context.canvas.height,
+            );
+            context.drawImage(cachedCanvases[cachedKeys[scrollIndex]], 0, 0);
+            renderWatcher.set({ doneDrawing, maxScrollIndex, scrollIndex });
+          });
+        }
+      },
+      25,
+      { trailing: true, leading: true },
+    );
   });
 </script>
 
 <svelte:window on:scroll="{scrollCB}" />
-<div class="canvas-container" bind:this="{parent}">
+<span class="canvas-container" bind:this="{parent}">
   <canvas
     id="myCanvas"
     bind:this="{canvasElement}"
+    role="banner"
+    aria-describedby="cody"
     width="100%"
     height="100%"
-  ></canvas>
-</div>
+  >
+    <span id="cody">Cody</span>
+  </canvas>
+</span>

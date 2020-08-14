@@ -1,18 +1,4 @@
 <style>
-  :root {
-    --color-5: #423d3b;
-    --color-4: #827e7b;
-    --color-2: #c1beba;
-    --color-1: #f0eee8;
-
-    --dark-wash: #f7f6f3;
-    --light-wash: #fbfaf9;
-
-    --accent: #003153;
-
-    --text-size-h5: 0.8em;
-  }
-
   .intro-container {
     position: relative;
     height: 10000px;
@@ -77,29 +63,30 @@
 <svelte:window on:resize="{handleResize}" on:scroll="{handleScroll}" />
 <main class:stopScroll>
   <div>
-    <div class="container home"></div>
-    <div class="intro-container" style="height: {$heightStore}px;">
+    <section class="intro-container" style="height: {$heightStore}px;">
       <div
         class="intro"
         class:introFixed
         bind:this="{introEl}"
         style="height: {window.innerHeight}px;"
       >
-        <Cody />
-        <Schaaf />
+        <h1>
+          <Cody />
+          <Schaaf />
+        </h1>
         <Arrow height="{$heightStore}" />
       </div>
-    </div>
-    <div
+    </section>
+    <section
       class="sections-container"
       bind:this="{sectionsContainerEl}"
       style="height: {sectionsContainerHeight}px;"
     >
       <div class="about-me-container">
         <div class="about-me container">
-          <h1 class="text-center">Welcome!</h1>
+          <h2 class="text-center">Welcome!</h2>
           <hr />
-          <h4>About Me</h4>
+          <h3 class="h4">About Me</h3>
 
           <p>
             You've probably already figured this out, but my name is Cody
@@ -114,7 +101,7 @@
           </p>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 
 </main>

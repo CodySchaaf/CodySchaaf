@@ -22,14 +22,9 @@
   .arrow-down.active .arrow {
     animation: pulse 1.2s ease-in-out infinite alternate;
   }
-  .arrow-down.showHelp .help {
-    opacity: 1;
-  }
   .arrow-down .help {
     text-align: center;
     margin-bottom: 20px;
-    transition: opacity 1s ease-in-out;
-    opacity: 0;
   }
   @keyframes pulse {
     from {
@@ -78,8 +73,10 @@
   class:active
   bind:this="{downArrowEl}"
   on:click="{arrowClickCB1}"
-  class:showHelp
+  aria-live="polite"
 >
-  <div class="help">Scroll down after animation.</div>
-  <div class="arrow" style="cursor: pointer;"></div>
+  {#if showHelp}
+    <div class="help">Scroll down after animation.</div>
+  {/if}
+  <div role="button" tabindex="0" class="arrow" style="cursor: pointer;"></div>
 </div>

@@ -70,12 +70,15 @@
 
 <svg
   class:hidden
+  role="banner"
   id="svg2"
   width="300"
   height="200"
+  aria-describedby="schaaf"
   viewBox="0 0 1 500"
   preserveAspectRatio="xMinYMin meet"
 >
+  <title id="schaaf">Schaaf</title>
   <g id="layer1">
     <g
       id="text3336"

@@ -1,5 +1,5 @@
 <style>
-  div {
+  nav {
     margin-top: 20px;
     margin-left: 20px;
     position: fixed;
@@ -12,6 +12,6 @@
   import Link from '../Link/index.svelte';
 </script>
 
-<div>
+<nav>
   <Link text="My Blog" href="http://blog.codyschaaf.com" />
-</div>
+</nav>

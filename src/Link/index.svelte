@@ -1,6 +1,7 @@
 <style>
   .link {
     text-decoration: none;
+    font-weight: bold;
     color: var(--color-2);
     position: relative;
   }
