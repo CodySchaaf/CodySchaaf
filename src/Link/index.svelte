@@ -31,7 +31,9 @@
 </style>
 
 <script lang="ts">
-  export let text: string;
+  import { onMount } from 'svelte';
+
+  export let text: string = '';
   export let href: string;
 
   // TODO WTF
@@ -43,5 +45,5 @@
 </script>
 
 <a class="link" on:touchend="{handleTouch}" data-text="{text}" href="{href}">
-  {text}
+  <slot>{text}</slot>
 </a>
