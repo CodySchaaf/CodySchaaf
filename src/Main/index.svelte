@@ -89,15 +89,13 @@
           <h3 class="h4">About Me</h3>
 
           <p>
-            You've probably already figured this out, but my name is Cody
-            Schaaf. I'm a full stack engineer at Sigfig. My expertise is in
-            Angular and Scala, and am experienced in Ruby on Rails, React,
-            JQuery and many more, but my true skills reside in my ability to
-            pick up any language or framework quickly and efficiently. My
-            passion is obtaining deep understanding of all the technologies I
-            work with. Which allows me to take full advantage of them, as well
-            as become the person people turn to for help allowing my team to be
-            as affective as possible.
+            Hi! My name is Cody Schaaf. I’m a web developer, mountain biker, and
+            general JavaScript enthusiast. I spend most of my time these days
+            working with React and TypeScript, but I also enjoy Svelte, Vue, and
+            Gatsby. I love creating engaging user experiences, especially with
+            complex JavaScript animations. I enjoy nothing more than learning new
+            languages and frameworks. Feel free to contact me with
+            questions/comments/anything.
           </p>
         </div>
       </div>
