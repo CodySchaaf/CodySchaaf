@@ -41,4 +41,4 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/ s3://${{ secrets.AWS_S3_BUCKET }}/ --exclude "*" --include "*.css" --include "*.js" --include "*.woff2" --recursive --metadata-directive REPLACE --expires 2034-01-01T00:00:00Z --acl public-read --cache-control max-age=2592000,public
+        run: aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/ s3://${{ secrets.AWS_S3_BUCKET }}/ --exclude "*" --include "*.css" --include "*.js" --include "*.woff2" --recursive --metadata-directive REPLACE --expires 2034-01-01T00:00:00Z --acl public-read --cache-control max-age=31536000,public
