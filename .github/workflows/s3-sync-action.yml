@@ -38,6 +38,4 @@ jobs:
           AWS_REGION: 'us-west-2'   # optional: defaults to us-east-1
           SOURCE_DIR: 'public'      # optional: defaults to entire repository
       - name: Update Cache
-        run: aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/ s3://${{ secrets.AWS_S3_BUCKET }}/ --exclude "*" --include "*.css" --include "*.js" \
-          --recursive --metadata-directive REPLACE --expires 2034-01-01T00:00:00Z --acl public-read \
-          --cache-control max-age=2592000,public
+        run: aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/ s3://${{ secrets.AWS_S3_BUCKET }}/ --exclude "*" --include "*.css" --include "*.js" --recursive --metadata-directive REPLACE --expires 2034-01-01T00:00:00Z --acl public-read --cache-control max-age=2592000,public
